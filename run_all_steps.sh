@@ -1,9 +1,9 @@
 #!/usr/bin/bash
 
-#This script will make a folder with the date and
+# This script will make a folder with the date and
 #1) run tassel pipeline
-#2) run filtering pipeline
-#3) get allele depth ratio file and estimate ploidies
+#2) run filtering steps
+#3) get allele depth ratio file and estimate ploidies, removing non-diploid individuals
 #4) get pairwise IBS matrix and perform clone correction
 #5) Final filtering
 
@@ -26,6 +26,8 @@ if [ ! -d pipeline_$DATE ]; then
 fi
 
 cd pipeline_$DATE
+#Copy current version of this script to directory
+cp "$SCRIPTS"/run_all_steps.sh .
 
 if [ ! -d tassel_run ]; then
 	mkdir tassel_run

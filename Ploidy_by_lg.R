@@ -1,4 +1,7 @@
-#Script modified from script written on computer 1/31
+# This script assigns markers to LGs based on genetic map in Lamour et al. 2012
+# Then produces histograms of allele depth ratios for each isolate and for each LG within each isolate
+# Then attempts to estimate a ploidy level for each linkage group
+# Finally prints out some plots summarizing ploidy trends
 
 ############################################   LOAD AND CLEAN DATA   ######################################
 print("Beginning to import data")

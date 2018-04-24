@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+#This script runs Tassel pipeline to call SNPs on P. cap. sexual population
+
 #ARGUMENTS
 #1) tassel 5 standalone directory path
 #2) genome directory path

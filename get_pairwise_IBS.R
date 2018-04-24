@@ -1,6 +1,8 @@
 #!/usr/bin/env Rscript
 
-print("STARTING")
+# This script takes a VCF file and creates a pairwise IBS similarity matrix 
+# for use in identifying and filtering out clones
+
 getwd()
 
 snps <- read.table("./capPF_filtered.012.pos")

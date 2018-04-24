@@ -4,6 +4,7 @@
 # And give them the same FullSampleName field
 # This field will now show each field from previous samples separated by a comma
 # ie DNASample:Flowcell1,Flowcell2:Lane1,Lane2:LibraryPrepID1,LibraryPrepID2
+# This is so Tassel will combine their reads when calling SNPs
 
 import sys
 

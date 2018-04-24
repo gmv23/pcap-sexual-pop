@@ -2,11 +2,9 @@
 
 # This script takes a pairwise IBS matrix, identifies clonal groups, and
 # filters genotype files in order to just keep one individual from each clonal group
-# Current version is modified from R script written on local machine 1/15/17
 
 getwd()
 library(igraph)
-print("Done with igraph")
 
 ################################# READ IBS MATRIX AND GENOTYPE FILES ##############################
 

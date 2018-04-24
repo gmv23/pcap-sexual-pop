@@ -1,3 +1,5 @@
+#This script is to perform final filtering after clone and ploidy correction
+
 ####################################### LOAD AND CLEAN DATA ##############################
 snps <- read.table("capPF_cc_parental_reps_dip.012.pos")
 colnames(snps) <- c("chrom", "pos")

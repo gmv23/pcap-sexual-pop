@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+#### This script is to filter vcf file for P. capsici. sexual population analysis
+
 #Get depth by individuals so we can filter out failed samples
 vcftools --vcf capsici_geno.vcf --depth --out full_depth_by_individual
 
