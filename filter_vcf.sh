@@ -17,23 +17,23 @@ grep "CB7GTANXX" full_depth_by_individual.idepth | grep -E "\s0\."
 # 15PF33A
 # 15PF48A
 
-#Just keep blight farm isolates and parents 
-cat full_depth_by_individual.idepth | awk -F: '$1 ~ /PF|664|6180/ {print}' | cut -f1 > pf_and_parents.txt
-vcftools --vcf capsici_geno.vcf --keep pf_and_parents.txt --recode --out step1_pf_and_parents
+#Just keep blight farm isolates, parents, and lab crosses 
+cat full_depth_by_individual.idepth | awk -F: '$1 ~ /PF|664|6180|^68/ {print}' | cut -f1 > pf_lab_and_parents.txt
+vcftools --vcf capsici_geno.vcf --keep pf_lab_and_parents.txt --recode --out step1_pf_lab_and_parents
 
 #Look at missingness by individual
-vcftools --vcf step1_pf_and_parents.recode.vcf --missing-indv --out pf_and_parents
+vcftools --vcf step1_pf_lab_and_parents.recode.vcf --missing-indv --out pf_lab_and_parents
 
 #Print average %missingness
-awk '{ total += $5 } END { print total/NR }' pf_and_parents.imiss
+awk '{ total += $5 } END { print total/NR }' pf_lab_and_parents.imiss
 #How many samples have greater than 40% missingness?
-awk '$5 > 0.4 { count++ } END { print count }' pf_and_parents.imiss
+awk '$5 > 0.4 { count++ } END { print count }' pf_lab_and_parents.imiss
 #What samples are they?
-awk '$5 > 0.4 {print}' pf_and_parents.imiss | sort -k 5
+awk '$5 > 0.4 {print}' pf_lab_and_parents.imiss | sort -k 5
 
 #Get rid of samples with more than %40 missingness (is 40 a good number)?
-vcftools --vcf step1_pf_and_parents.recode.vcf --remove <(tail pf_and_parents.imiss -n +2 | awk '$5 > 0.4 {print $1}' \
-pf_and_parents.imiss) --recode --out step2_low_missing_inds
+vcftools --vcf step1_pf_lab_and_parents.recode.vcf --remove <(tail pf_lab_and_parents.imiss -n +2 | awk '$5 > 0.4 {print $1}') \
+--recode --out step2_low_missing_inds
 
 #Get rid of indels
 vcftools --vcf step2_low_missing_inds.recode.vcf --remove-indels --recode --out step3_no_indels

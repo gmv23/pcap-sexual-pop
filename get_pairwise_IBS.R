@@ -3,19 +3,23 @@
 # This script takes a VCF file and creates a pairwise IBS similarity matrix 
 # for use in identifying and filtering out clones
 
-getwd()
+################################## LOAD 012 FILES ###############################
 
 snps <- read.table("./capPF_filtered.012.pos")
 head(snps)
+
+indvs <- read.table("./capPF_filtered.012.indv", stringsAsFactors = F)
+indvs <-unlist(indvs$V1)
+
 geno <- read.table("./capPF_filtered.012")
 print("geno loaded")
 geno <- geno[,-1]
 geno <- t(geno)
-indvs <- read.table("./capPF_filtered.012.indv", stringsAsFactors = F)
-indvs <-unlist(indvs$V1)
-head(indvs)
+
 geno[geno==-1] <- NA
 print('finished replacing NAs')
+
+################################ IBS FUNCTION ###################################
 
 ibs <- function(x,y){
   
@@ -42,6 +46,7 @@ ibs <- function(x,y){
   return(total/(2*number_sites))
 }
 
+#################### CALCULATE IBS FOR EACH PAIRWISE ISOLATE COMBINATION ###########
 
 d <- ncol(geno)
 

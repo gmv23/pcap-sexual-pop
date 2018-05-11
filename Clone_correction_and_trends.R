@@ -105,6 +105,21 @@ clone_assignments <- clone_assignments[-1,]
 clone_assignments <- as.data.frame(clone_assignments, stringsAsFactors = F)
 clone_assignments$Clonal_group <- as.integer(clone_assignments$Clonal_group)
 
+# Are there any clonal groups covering multiple years?
+clone_groups <- names(table(clone_assignments$Clonal_group)[table(clone_assignments$Clonal_group) > 1])
+
+years <- sapply(as.character(clone_assignments$Sample), function(x) substr(x,1,2))
+years[grep("664", as.character(clone_assignments$Sample))] <- "p1"
+years[grep("6180", as.character(clone_assignments$Sample))] <- "p1"
+
+print("The following clonal groups have isolates represented from multiple years or include parents or lab F1s")
+for(cg in clone_groups){
+  cg.years <- years[clone_assignments$Clonal_group == cg]
+  if(length(unique(cg.years)) > 1){
+    print(cg)
+  }
+}		
+
 ## Get rid of 0664 reintroductions from geno, indvs, IBS_matrix, and clone_assignments
 
 group_664 <- unique(clone_assignments$Clonal_group[grep("664", clone_assignments$Sample)])
@@ -214,7 +229,7 @@ setwd("./plots/")
 
 #Extract year from sample name
 clone_assignments_prog$Year <- sapply(clone_assignments_prog$Sample, FUN = function(x) 
-  return(unlist(strsplit(x, "PF"))[1]))
+  substr(x,1,2))
 
 #Sum number of genotypes passing filters to this point by year
 isolate_sums <- as.data.frame(table(clone_assignments_prog$Year))

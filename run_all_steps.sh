@@ -51,7 +51,6 @@ if [ ! -d filtering ]; then
 	mkdir filtering
 	cd filtering
 	cp "$SCRIPTS"/filter_vcf.sh .
-	cp "$SCRIPTS"/find_bad_dups.py .
 	cp ../tassel_run/capsici_geno.vcf .
 	bash filter_vcf.sh > filter_vcf.log
 	cd ..
@@ -90,6 +89,7 @@ if [ ! -d final_filtering ]; then
 	cd final_filtering
 	cp "$SCRIPTS"/get_genotype_depth.py .
 	cp ../filtering/genomic_pass_initial_filter.recode.vcf .
+
 	#Just keep clone corrected progeny and all parental reps for now and remove non diplod isolates
 	cat <( grep -E "664|6180" ../filtering/capPF_filtered.012.indv ) ../clone_correction/filtered_data/capPF_cc.012.indv > isolates_to_keep.txt 
 	vcftools --vcf genomic_pass_initial_filter.recode.vcf --keep isolates_to_keep.txt --recode --out capPF_cc_parental_reps
