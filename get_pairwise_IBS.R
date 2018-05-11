@@ -22,28 +22,10 @@ print('finished replacing NAs')
 ################################ IBS FUNCTION ###################################
 
 ibs <- function(x,y){
+
+  alleles_ibs <- 2 - abs(x-y)
+  return(sum(alleles_ibs, na.rm = T)/(2*sum(!is.na(alleles_ibs))))
   
-  if(length(x) != length(y)){
-    stop("Not good")}
-  
-  total <- 0
-  number_sites <- length(x)
-  
-  for(i in 1:length(x)){
-    if(is.na(x[i]) | is.na(y[i])){
-      number_sites <- number_sites - 1
-      next
-    }else if(x[i]==y[i]){
-      add <- 2
-    }else if(abs(x[i] - y[i]) == 1){
-      add <- 1
-    }else if(abs(x[i] - y[i]) == 2){
-      add <- 0
-    }
-    
-    total <- total + add
-  }
-  return(total/(2*number_sites))
 }
 
 #################### CALCULATE IBS FOR EACH PAIRWISE ISOLATE COMBINATION ###########
