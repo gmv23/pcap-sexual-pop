@@ -31,9 +31,9 @@ hist(het_rates,
      xlab = "Site heterozygosity")
 dev.off()
 
-high_hets <- which(het_rates>0.9)
+high_hets <- which(het_rates>0.95)
 
-print(paste(length(high_hets),"sites are removed due to heterozygosity > 0.9"))
+print(paste(length(high_hets),"sites are removed due to heterozygosity > 0.95"))
 snps <- snps[-high_hets,]
 geno <- geno[,-high_hets]
 depths <- depths[-high_hets,]

@@ -7,6 +7,9 @@
 print("Beginning to import data")
 depths <- read.table("depth_ratios.txt", header = T)
 
+indvs <- read.table("capPF_filtered.012.indv", stringsAsFactors = F)
+indvs <-  unlist(indvs[,1])
+
 lg_order <- read.csv("scaffold_assignments.csv", header=T, stringsAsFactors = F)
 lg_order <- lg_order[-nrow(lg_order),] #Get rid of totals row
 
@@ -39,7 +42,9 @@ subscaffolds$Lowest_Marker <- sapply(subscaffolds$Lowest_Marker, get_marker)
 subscaffolds$Highest_Marker <- sapply(subscaffolds$Highest_Marker, get_marker)
 
 print("Finished loading and cleaning data")
+
 ##################################   COMBINE GENETIC MAP DATASETS INTO ONE DATA FRAME   #######################
+
 print("Pulling information from genetic map tables to assign scaffolds to linkage groups")
 
 block_assignments <- matrix(NA, nrow=nrow(lg_order), ncol=6)
@@ -72,7 +77,9 @@ block_assignments <- as.data.frame(block_assignments)
 head(block_assignments[order(block_assignments$Scaffold, block_assignments$Block),])
 
 print("Finished assigning scaffolds to linkage groups")
+
 ############################################   ASSIGN POSITIONS IN VCF FILE TO LGs    ##################################
+
 print("Assign markers to linkage groups")
 
 # Insert LG column to depths data frame after chromosome and position
@@ -102,7 +109,9 @@ for(i in 1:nrow(depths)){
   depths$LG[i] <- lg #Populate LG column of depths data frame
 }
 print("Finished assignign markers to linkage groups")
+
 ###############################################   DRAW HISTOGRAMS FOR ALL ISOLATES AND LGS    ######################################
+
 print("Beginning to create histograms")
 table(depths$LG) #Total number of markers per linkage group
 
@@ -198,9 +207,7 @@ estimate_ploidy <- function(x){
 
 #Make file of non-diploid individuals
 isolate_ploidies <- apply(depths[,4:ncol(depths)], 2, estimate_ploidy)
-non_diploid_isolates <- names(isolate_ploidies[isolate_ploidies != 2])
-non_diploid_isolates <- substr(non_diploid_isolates, 2, nchar(non_diploid_isolates))
-non_diploid_isolates <- gsub(pattern = ".", replacement = ":", non_diploid_isolates, fixed=T)
+non_diploid_isolates <- indvs[isolate_ploidies != 2]
 write.table(non_diploid_isolates, "non_diploid_isolates.txt", quote = F, row.names = F, col.names = F)
 
 #Make matrix with rows as isolates and columns as linkage groups
@@ -234,7 +241,7 @@ LG_ploidies <- as.data.frame(LG_ploidies)
 print("Finished estimating ploidy levels")
 #############################################   INCORPORATE CLONE INFORMATION    ######################################
 print("Reading in clonal information")
-clones <- read.csv("../clone_correction/filtered_data/Clonal_groups_including_0664_reintros.csv",
+clones <- read.csv("Clonal_groups_including_0664_reintros.csv",
                    header=T, stringsAsFactors = F)
 
 clones$Sample <- sapply(clones$Sample, get_name)
@@ -248,11 +255,15 @@ LG_ploidies <- LG_ploidies[order(LG_ploidies$Clonal_group),]
 write.csv(LG_ploidies, "ploidy_est_non_CC.csv")
 # No ploidy aberrations consistent within clonal groups
 print("Finished creating csv file with clonal group info and ploidy levels")
+
 ###############################################   LOOK AT TRENDS AND PLOT    ######################################
+
 print("Plotting trends")
 ### Distribution of ploidy levels by linkage group
 
 pdf("./plots/ploidy_by_lg_bp.pdf")
+old.par <- par(no.readonly = T)
+par(xpd=NA)
 
 #Get matrix of counts for ploidy levels across isolates for each linkage group
 lg_ploidy_counts <- matrix(NA, ncol=18, nrow=4)
@@ -265,18 +276,17 @@ rownames(lg_ploidy_counts) <- 1:3
 
 #Make barplot
 bp_colors <- c("burlywood", "plum4", "cadetblue3")
-barplot(lg_ploidy_counts,beside=T, col=bp_colors,
+barplot(lg_ploidy_counts, col=bp_colors,
         main = "Ploidy levels by linkage group",
         ylab = "Counts",
         xlab = "Linkage group",
-        ylim = c(0,380)
-        )
-legend(x=40, y=375,
+        ylim = c(0,max(apply(lg_ploidy_counts,2,sum))*1.15))
+legend("topright",
        legend = c("Diploid", "Triploid", "Tetraploid"),
        fill = bp_colors,
        ncol = 3,
        x.intersp = 0.2,
-       text.width = 5,
+       text.width = 2,
        bty="n",
        cex=0.85)
 

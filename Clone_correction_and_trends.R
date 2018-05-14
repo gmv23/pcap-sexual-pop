@@ -177,6 +177,7 @@ cap <- clone_assignments_prog
 
 #Sample all but one from each clonal group to remove
 clones_to_remove <- c()
+set.seed(1001) # SET SEED TO GET SAME ISOLATES EACH TIME
 for(i in unique(cap$Clonal_group)){
   clones <- cap$Sample[cap$Clonal_group==i]
   clones_toss <- sample(clones, size = length(clones)-1, replace=F)

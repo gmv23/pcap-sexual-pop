@@ -75,6 +75,8 @@ if [ ! -d ploidy_variation ]; then
 	cp "$SCRIPTS"/get_genotype_depth.py .
 	cp ~/sexual_pop/lg_info/* .
 	cp "$SCRIPTS"/Ploidy_by_lg.R .
+	cp ../clone_correction/filtered_data/Clonal_groups_including_0664_reintros.csv . 
+	cp ../filtering/capPF_filtered.012.indv .
 	mkdir plots
 	mkdir plots/all_isolates
 	mkdir plots/all_isolates_by_lg
